@@ -11,14 +11,19 @@ app.get("/add-data/:spreadSheetId/:sheetName", async (req, res) => {
 
   let data = req.query;
 
-  const values = Object.keys(data).map((item, index, array) => {
+  const recordingUrl = `http://${data.server_ip}/RECORDINGS/MP3/${data.recording_filename}-all.mp3`;
+
+  const sheetData = Object.keys(data).map((item, index, array) => {
     return data[item];
   });
+
+  sheetData.push(recordingUrl);
+
   
-  const finalValues = [values]
+  const finalValues = [sheetData]
 
   try {
-    const response = await addDataToSheet(spreadSheetId, sheetName, "A2:AB2", finalValues);
+    const response = await addDataToSheet(spreadSheetId, sheetName, "A1:AB1", finalValues);
 
     res.json(response.data);
   } catch (error) {
